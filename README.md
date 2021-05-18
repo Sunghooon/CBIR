@@ -1,6 +1,7 @@
 # Practice for Content Based Image Retrieval (Engaging...)
 This project is a practice for 'pattern recognition' class, analyzing CBIR problem.
 The dataset used in here is shopee-product-matching from [Shopee - Price Match Guarantee](https://www.kaggle.com/c/shopee-product-matching/overview).
+
 In here, I'll engage in:
 * Principal component analysis (PCA)
 * SIFT feature
