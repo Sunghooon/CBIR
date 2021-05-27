@@ -160,7 +160,7 @@ To satisfy performance simultaneously, there is searching `k` value which can ex
 </p>
 
 <p align="center"> 
-<img src="./img/PCA_image_cumulative_explained_variance_explained_by_the_components.png" alt="tfidf_graph"/> 
+<img src="./img/PCA_IMAGE_cumulative_explained_variance_explained_by_the_components.png" alt="tfidf_graph"/> 
 </p>
 
 # REFERENCE
