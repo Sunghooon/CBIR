@@ -141,27 +141,104 @@ And the score is,
 
 ## 3. Deep-Learning Based
 
+Deep-Learning based method mainly refers [this](https://www.kaggle.com/finlay/unsupervised-image-text-baseline-in-20min). 
 
+    (cbir) python cnn_image.py
+
+||F1|Precision|Recall|
+|---|---|---|---|
+|TEXT info|0.516|0.963|0.387|
+|IMAGE info|0.543|0.982|0.409|
+|mixed|0.855|0.952|0.836|
+
+# Analysis
+
+There will be brief analysis about this project and experiment. One is for myself to have more impression during this work and also for others to easily remind some concepts. 
+
+## Dataset
+Given dataset, `shopee-product-matching` has more than 30,000+ training samples and images respectively. Every single item has `label_group`, more than 10,000+. Briefly shows,
+
+<p align="center"> 
+<img src="./img/dataset.png" alt="dataset"/> 
+</p>
+
+At the very first, it will search for other items whose label_group are same with given item. And create one column containing these lists. This is what `target` column means. So you can make sense which one is in same label_group, as well as given item. 
 
 ## 1. Principal Component Analysis (PCA)
-In here, text (item title) and image information will be used to extracting feature from given dataset. All of codes are written in `anaconda`. About installing environments, will be explained later. 
 
-### tfidf_title.ipynb
+In here, text (item title) and image information will be used to extracting feature from given dataset. All of codes are written in `anaconda`. 
+
+### TEXT info
 
 
 For extracting feature from text data, I used `TF-IDF` features. `TF-IDF` is short-term of `Term Frequency - Inverse Document Frequency`. It mainly focuses on how frequent the word appears, and also considers whether the word is also appeared in other sample. If so, the importance of the word will be decreased as well. 
 
 Because every word in the whole dataset is not quite repeatedly, dimension of original feature is huge, probably causing the curse of dimensionality. To tackle with this, I used PCA to decrease original `n`-dim feature into `k`-dim feature. (n > k)
 
-To satisfy performance simultaneously, there is searching `k` value which can explain more than 95% of original features' variance. In graph below, since it seems like still has great dimension, you can also consider lower `k`.
+To satisfy performance as well, there is searching `k` value which can explain more than 95% of original features' variance. In graph below, since it seems like still has great dimension, you can also consider lower `k`, or lower percentage.
 
 <p align="center"> 
 <img src="./img/TFIDF_and_PCA_cumulative_explained_variance_explained_by_the_components.png" alt="tfidf_graph"/> 
 </p>
 
+As figure shows, training samples originally have 10000+ features, which is huge dimension. By analyzing principle components, the eigenvectors of original features will be re-arranged in order of importance. In the graph above, we can figure out how many features we have to use to explain the variance of original features data. Graph shows if we use 5000+ principal components, can explain 95% variance of original data. Since it is still a big number, we can consider using lower dimension.
+
+### IMAGE info
+
+I regarded every single pixel as one feature, 512x512 size image has 1x262144 features vector. And after by PCA we can decrease this huge dimension into small one. 
+
 <p align="center"> 
-<img src="./img/PCA_IMAGE_cumulative_explained_variance_explained_by_the_components.png" alt="tfidf_graph"/> 
+<img src="./img/PCA_image_cumulative_explained_variance_explained_by_the_components.png" alt="pca_image"/> 
 </p>
+
+With similar process, it seems more than 1000+ principal components will have good performance. And the whole score with PCA method is below :
+
+||F1|Precision|Recall|
+|---|---|---|---|
+|TEXT info|0.551|0.750|0.538|
+|IMAGE info|0.768|0.847|0.766|
+
+
+## 2. SIFT feature
+
+To classify items with SIFT features, it is basic step to figure out how can we define the similarity of two SIFT features groups. At the first think, I tried clustering all of SIFT features from whole training image set. After clustering original SIFT features into some clusters, e.g. 30, the SIFT features in every single image are re-arranged into those 30 clusters. So we can check how those SIFT features in single image are distributed. 
+
+<p align="center"> 
+<img src="./img/SIFT_structure1.png" alt="sift_structure"/> 
+</p>
+
+After repeating the process above, I trained those features by SVM. 
+The reason why I mixed some other method is that I thought it may not be proper to calculate distance (for similarity) with original SIFT features descriptors. But different with my expectation, the performance is not good enough.
+
+<p align="center"> 
+<img src="./img/SIFT_structure2.png" alt="sift_structure2"/> 
+</p>
+
+||F1|Precision|Recall|
+|---|---|---|---|
+|IMAGE info|0.123|0.200|0.089|
+
+I think the reason is because SIFT features are highly sensitive to letter in image, which is not important part of item image. Furthermore, to make process more easily, I limited the number of SIFT features when the features are extracted from image. And the number of features every image has isn't predictable. For instance, I set limit to obtain just 100 SIFT features from image. Then probably I couldn't get enough number of features for some cases. 
+
+After this project, I will continue to engage in searching other methods to define image's similarity while using SIFT feature.
+
+## 3. Deep-Learning Based 
+
+Convolution Neural Network (CNN) was used as a method for Deep-Learning Based model, especially ResNet-18, which is constructed with 18 layers deep. Different with other methods, CNN can automatically choose and extract features from given images.
+
+<p align="center"> 
+<img src="./img/resnet18_structure.png" alt="resnet18_structure"/> 
+</p>
+
+Further analysis is probably necessary for me, and the result is below :
+
+||F1|Precision|Recall|
+|---|---|---|---|
+|TEXT info|0.516|0.963|0.387|
+|IMAGE info|0.543|0.982|0.409|
+|mixed|0.855|0.952|0.836|
+
+
 
 # REFERENCE
 ```
