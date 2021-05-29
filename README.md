@@ -188,7 +188,7 @@ As figure shows, training samples originally have 10000+ features, which is huge
 I regarded every single pixel as one feature, 512x512 size image has 1x262144 features vector. And after by PCA we can decrease this huge dimension into small one. 
 
 <p align="center"> 
-<img src="./img/PCA_image_cumulative_explained_variance_explained_by_the_components.png" alt="pca_image"/> 
+<img src="./img/PCA_IMAGE_cumulative_explained_variance_explained_by_the_components.png" alt="pca_image"/> 
 </p>
 
 With similar process, it seems more than 1000+ principal components will have good performance. And the whole score with PCA method is below :
