@@ -2,7 +2,7 @@
 This project is a practice for 'pattern recognition' class, analyzing CBIR problem.
 The dataset used in here is shopee-product-matching from [Shopee - Price Match Guarantee](https://www.kaggle.com/c/shopee-product-matching/overview).
 
-First of all, thanks for some developers to share clean explanation and their codes. This work is mainly designed on the bases they already made, and I put some my own changes or experiments to study. About where I've referred these information, I'll write at the bottom of this document.
+First of all, thanks for some developers to share clear explanation and their codes. This work is mainly designed on the bases they already made, and I put some my own changes or experiments to study. About where I've referred these information, I'll write at the bottom of this document.
 
 As a beginner, I hope to be good at Github, as well as studying throughout this work.
 
