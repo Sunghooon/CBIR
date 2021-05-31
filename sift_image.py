@@ -31,7 +31,7 @@ train['target'] = train.label_group.map(tmp)
 
 # Experiment Part ---------------------------------------------
 # SIFT matching between query image and trained image
-
+'''
 img1 = cv2.imread(train['image'].iloc[19], 0)          # queryImage
 img1_label = train['label_group'].iloc[19]
 img2_idx = np.where(train['label_group'] == img1_label)
@@ -100,7 +100,7 @@ plt.figure(figsize=(10, 7))
 plt.imshow(img3)
 plt.title('SIFT feature matching results within different label groups')
 plt.show()
-
+'''
 
 
 # Implementation Part ---------------------------------------------
@@ -178,7 +178,7 @@ def build_center():
     # Training set of word bags
     centers = learnVocabulary(features)
     # Save the word bag
-    filename = 'sift_svm_materials/' + str(n_cluster) + 'svm_centers_.npy'
+    filename = 'sift_materials_svm/' + str(n_cluster) + 'svm_centers_.npy'
     np.save(filename, centers)
     print('Word bag :', centers.shape)
 
@@ -192,7 +192,7 @@ def build_center():
 # model on the test set.
 
 def cal_vec():
-    filename = 'sift_svm_materials/' + str(n_cluster) + 'svm_centers_.npy'
+    filename = 'sift_materials_svm/' + str(n_cluster) + 'svm_centers_.npy'
     centers = np.load(filename)
     data_vec = np.float32([]).reshape(0, n_cluster)
     labels = np.float32([])
@@ -216,7 +216,7 @@ def SVM_Train(data_vec, labels):
     #clf = svm.SVC(kernel='poly', degree=8)
     clf = svm.SVC(kernel='rbf')
     clf.fit(data_vec,labels)
-    joblib.dump(clf, 'sift_svm_materials//svm_model.m')
+    joblib.dump(clf, 'sift_materials_svm/svm_model.m')
 
 def getF1score(col):
     def f1score(row):
@@ -245,9 +245,9 @@ def getRecall(col):
 from sklearn.metrics import f1_score
 
 def SVM_Test():
-    filename = 'sift_svm_materials//' + str(n_cluster) + 'svm_centers_.npy'
+    filename = 'sift_materials_svm/' + str(n_cluster) + 'svm_centers_.npy'
     
-    clf = joblib.load('sift_svm_materials//svm_model.m')
+    clf = joblib.load('sift_materials_svm/svm_model.m')
     centers = np.load(filename)
     
     data_vec, labels = cal_vec()
@@ -291,21 +291,21 @@ print('recall :', recall)
 
 
 # plotting histogram
-x = range(0, n_cluster)
+'''x = range(0, n_cluster)
 y = data_vec[0]
 plt.figure(figsize=(10,6))
 plt.title('#1 image cluster histogram')
 plt.xlabel('cluster index')
 plt.ylabel('how many matches')
 plt.bar(x, y)
-
+'''
 
 
 
 def predict(img):
-    filename = 'sift_svm_materials//' + str(n_cluster) + 'svm_centers_.npy'
+    filename = 'sift_materials_svm/' + str(n_cluster) + 'svm_centers_.npy'
 
-    clf = joblib.load('sift_svm_materials//svm_model.m')
+    clf = joblib.load('sift_materials_svm/svm_model.m')
     centers = np.load(filename)
     features = calcSiftFeature(img)
     featVec = calcFeatVec(features, centers)
@@ -314,7 +314,7 @@ def predict(img):
     return pred
 
 
-
+'''
 # demo with img 
 print('Demo -----------------------------------------------------------------------------')
 print('LEFT : input')
@@ -339,5 +339,5 @@ for i in range(0,10):
     plt.imshow(gt_img, cmap='bone')
     img_idx += 1
     
-plt.show()
+plt.show()'''
 
