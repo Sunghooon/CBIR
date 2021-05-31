@@ -1,4 +1,4 @@
-# Practice for Content Based Image Retrieval (Engaging...)
+# Practice for Content Based Image Retrieval 
 This project is a practice for 'pattern recognition' class, analyzing CBIR problem.
 The dataset used in here is shopee-product-matching from [Shopee - Price Match Guarantee](https://www.kaggle.com/c/shopee-product-matching/overview).
 
@@ -19,35 +19,39 @@ Plus, since I am still not skillful with dealing memory, it may performs very in
 ## Installation
 First of all, create a new virtual-environment, for example, `cbir`. In Anaconda prompt try (I only wrote command-line):
 
-    (base)conda create -n cbir -f requirements.yaml
-    (base)conda activate cbir
+    (base) > conda create -n cbir -f requirements.yaml
+    (base) > conda activate cbir
 
 If you want to run this program with `jupyter notebook`, move to `~~~/Context_Based_Image_Retrieval` and try:
 
-    (cbir)jupyter notebook
+    (cbir) > jupyter notebook
 
 The required directory sturcutre is:
 
 ```bash
-+-- Context_Based_Image_Retrieval/
-    +-- shopee-product-matching/
-        +-- test_images/
-        +-- train_images/
-        +-- train.csv
-        +-- test.csv
-        +-- ...
-    +-- sift_materials_svm/
-    +-- pca_feature_materials/
-    +-- sift_svm_materials/
-    +-- img/
-    +-- pca_image.py
-    +-- sift_image.py
-    +-- tfidf_title.py
-    +-- pca_image.ipynb
-    +-- sift_image.ipynb
-    +-- tfidf_title.ipynb
-    +-- requirements.yaml
-    +-- README.md
+─── Context_Based_Image_Retrieval/
+    ├── shopee-product-matching/
+    |   ├── test_images/
+    |   ├── train_images/
+    |   ├── train.csv
+    |   ├── test.csv
+    |   └── ...
+    ├── sift_materials_svm/
+    ├── pca_materials/
+    |    ├── text_materials/
+    |    ├── image_materials/
+    |    └── mixed_materials/
+    ├── cnn_feature_materials/
+    ├── img/
+    ├── pca_image.py
+    ├── pca_imageMake.py
+    ├── pca_title.py
+    ├── pca_titleMake.py
+    ├── pca_mixture.py
+    ├── sift_image.py
+    ├── CNN_retrieval.py
+    ├── requirements.yaml
+    └── README.md
 ```
 
 ## Demo
@@ -56,6 +60,7 @@ In here, I'll use these methods:
 * Principal component analysis (PCA)
   * text info.
   * image info.
+  * mixed
 * SIFT feature
   * image info.
 * Deep-Learning based
@@ -65,26 +70,21 @@ In here, I'll use these methods:
 
 ## 1. Principal Component Analysis (PCA)
 
+Every method you should run `pca_titleMake.py`, `pca_imageMake.py` first, respectively making `##_trained_text_feature.csv` and `##_trained_image_feature.csv`. And the `###` of file name means, the number of samples when the file was made.
 ### text info.
-In `tfidf_title.py`, you can change the number of samples, N_SAMPLE:
 
-tfidf_title.py
-```python
-...
-N_SAMPLE = 5000
-DATA_PATH = 'shopee-product-matching/'
-train = pd.read_csv(DATA_PATH + 'train.csv')
-...
-```
 Can start by command below. *(should check your current path)*
 
-    (cbir) python tfidf_title.py
+    (cbir) > python pca_titleMake.py
 
-After this, `###_trained_text_feature.csv` will be saved at `pca_feature_materials/` directory, to save time in after running. This file is a calculated features matrix, consuming lots of resources and times. And the `###` of file name means, the number of samples when the file was made.
+It will ask you how many samples do you want to use for training, input numbers.
+After this, `###_trained_text_feature.csv` will be saved at `pca_feature_materials/` directory, to save time in after running. This file is a calculated features matrix, consuming lots of resources and times.
 
-And we can check this method's score. (not for test_data)
+And we can check this method's score. (score training model)
 
-To score trained model, `F1 score`, `Precision`, `Recall` will be used. I used 10000 data as training data (0~9999), the result of training as below:
+    (cbir) > python pca_title.py
+
+It will ask you to input the number how many samples you used to make feature data. To score trained model, `F1 score`, `Precision`, `Recall` will be used. I used 10000 data as training data (0~9999), the result of training as below:
 
 ||F1|Precision|Recall|
 |---|---|---|---|
@@ -92,9 +92,13 @@ To score trained model, `F1 score`, `Precision`, `Recall` will be used. I used 1
 
 
 ### image info.
-In `pca_image.py`, you also can change the number of samples, N_SAMPLE. As similar with `tfidf_title.py`, you can start by command below. *(should check your current path)*
+In `pca_image.py`, you also can change the number of samples, N_SAMPLE. As similar with `pca_title.py`, you can start by command below. *(should check your current path)*
 
-    (cbir) python pca_image.py
+    (cbir) > python pca_imageMake.py
+
+Same with above, you have to input how many samples you want to use.
+
+    (cbir) > python pca_image.py
 
 The result below is produced from 5000 training samples (0~5999):
 
@@ -102,11 +106,22 @@ The result below is produced from 5000 training samples (0~5999):
 |---|---|---|---|
 |IMAGE info|0.768|0.847|0.766|
 
+### mixed info.
+For mixed features, I used 6000 data for training. To run this, you should already have both for `###_trained_text_feature.csv` and `###_trained_image_feature.csv`.
+
+    (cbir) > python pca_mixture.py
+
+||F1|Precision|Recall|
+|---|---|---|---|
+|TEXT info|0.812|0.749|0.964|
+|IMAGE info|0.842|0.811|0.876|
+|mixed info|0.852|0.826|0.856|
+
 
 ## 2. SIFT feature
 Because SIFT features are describing some points in the image, I didn't prepare about text information here. For running this:
 
-    (cbir) python sift_image.py
+    (cbir) > python sift_image.py
 
 And this has some figures showing the result of feature matching. 
 
@@ -125,7 +140,7 @@ It also has a clustering process and uses them to make new feature to train SVM 
 </p>
 
 
-After you did, svm model files will be saved at `sift_svm_materials/`. For example, `svm_model.m` and `##svm_centers_.npy` files will be saved at `sift_svm_materials/`. About the process of this code, please refer next section.
+After you did, svm model files will be saved at `sift_materials_svm/`. For example, `svm_model.m` and `##svm_centers_.npy` files will be saved at `sift_materials_svm/`. About the process of this code, please refer next section.
 
 <p align="center"> 
 <img src="./img/Demo.png" width="50%" height="20%"/> 
@@ -143,13 +158,14 @@ And the score is,
 
 Deep-Learning based method mainly refers [this](https://www.kaggle.com/finlay/unsupervised-image-text-baseline-in-20min). 
 
-    (cbir) python cnn_image.py
+    (cbir) > python CNN_retrieval.py
 
+And the score with 6000 samples is below, 
 ||F1|Precision|Recall|
 |---|---|---|---|
-|TEXT info|0.516|0.963|0.387|
-|IMAGE info|0.543|0.982|0.409|
-|mixed|0.855|0.952|0.836|
+|TEXT info|0.804|0.991|0.741|
+|IMAGE info|0.876|0.990|0.835|
+|mixed|0.883|0.987|0.847|
 
 # Analysis
 
@@ -198,6 +214,12 @@ With similar process, it seems more than 1000+ principal components will have go
 |TEXT info|0.551|0.750|0.538|
 |IMAGE info|0.768|0.847|0.766|
 
+Considering PR-curves of PCA model, it seems like those graphs with `image-pca` and `mixed-pca` is not very ideal. The graphs are made with changes of threshold value from 0 to 1. 
+<p align="center"> 
+<img src="./img/PR_curves.png" alt="pr_curves"/> 
+</p>
+
+
 
 ## 2. SIFT feature
 
@@ -230,7 +252,7 @@ Convolution Neural Network (CNN) was used as a method for Deep-Learning Based mo
 <img src="./img/resnet18_structure.png" alt="resnet18_structure"/> 
 </p>
 
-Further analysis is probably necessary for me, and the result is below :
+Further analysis is probably necessary for me, and the result with whole samples is below :
 
 ||F1|Precision|Recall|
 |---|---|---|---|
